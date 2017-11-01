@@ -17,18 +17,19 @@ public class JobLauncherController {
     Job timerTaskImp;
 	
 	@RequestMapping("/jobLauncher")
-    public void handle() throws Exception{
-		getJobLauncher().run(timerTaskImp, new JobParameters());
+    public String handle() throws Exception{
+//		getJobLauncher().run(timerTaskImp, new JobParameters());
+		return "Success";
     }
 	
-	@Bean
-	public JobLauncher getJobLauncher() throws Exception {
-		SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
-		jobLauncher.setJobRepository(null); 
-		jobLauncher.setTaskExecutor(new SimpleAsyncTaskExecutor()); 
-		jobLauncher.afterPropertiesSet(); 
-		return jobLauncher;
-	}
+//	@Bean
+//	public JobLauncher getJobLauncher() throws Exception {
+//		SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+//		jobLauncher.setJobRepository(null); 
+//		jobLauncher.setTaskExecutor(new SimpleAsyncTaskExecutor()); 
+//		jobLauncher.afterPropertiesSet(); 
+//		return jobLauncher;
+//	}
 	
 //	@Bean 
 //	 @Override 

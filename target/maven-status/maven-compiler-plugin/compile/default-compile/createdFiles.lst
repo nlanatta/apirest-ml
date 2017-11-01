@@ -5,4 +5,3 @@ com/ml/entity/Weather.class
 com/ml/controller/JobLauncherController.class
 com/ml/App.class
 com/ml/job/TimerTaskImp.class
-com/ml/controller/JobLauncherController$1.class
