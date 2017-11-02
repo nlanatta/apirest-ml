@@ -1,14 +1,19 @@
 package com.ml.job;
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParametersIncrementer;
-import org.springframework.batch.core.JobParametersValidator;
+import java.util.TimerTask;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-public class TimerTaskImp implements Job {
+import com.ml.entity.Weather;
+import com.ml.repository.WeatherRepository;
 
+@Component
+public class TimerTaskImp extends TimerTask {
+
+	@Autowired
+	WeatherRepository repo;
+	
 	private int count;
 	private double firstone = 0;
 	private double secondone = 0;
@@ -23,6 +28,7 @@ public class TimerTaskImp implements Job {
 	private void checkSameAngule(int count2) {
 		if( count2 >= 3650) {
 			System.out.println("[[[[[[[[FINISHED]]]]]]]]]]]]]");
+			this.cancel();
 		}
 		
 		firstone -= 1;
@@ -55,7 +61,7 @@ public class TimerTaskImp implements Job {
 		
 //		alignChequer();
 		triangleChequer();
-//		checkSameLine();
+		checkSameLine();
 			
 	}
 
@@ -82,6 +88,7 @@ public class TimerTaskImp implements Job {
 			System.out.println("secondone :"+secondonepos);
 //			System.out.println("thirthdone :"+thirthdone);
 			System.out.println("thirthdone pos:"+thirthdone);
+			repo.save(getWeather(count,"PRESION y TEMP OPTIMA"));
 		}
 		
 		if ( a1 == a2 && a1 == a3 && a1 == 0 ) {
@@ -97,7 +104,15 @@ public class TimerTaskImp implements Job {
 			System.out.println("a3 :"+a3);
 			countSuccess += 1;
 			System.out.println("countSequia: "+countSuccess);
+			repo.save(getWeather(count,"SEQUIA"));
 		}
+	}
+
+	private Weather getWeather(int count2, String weatherValue) {
+		Weather item = new Weather();
+		item.setDayValue(count2);
+		item.setWeatherValue(weatherValue);
+		return item;
 	}
 
 	private void triangleChequer() {	
@@ -112,7 +127,7 @@ public class TimerTaskImp implements Job {
 		double l1 = 0;
 		double l2 = 0;
 		double l3 = 0;		
-		
+		String status = null;
 		if ( ((firstonepos - secondonepos) >= 135 || (firstonepos - secondonepos) <= -135)
 			&& ((firstonepos - thirthdone) >= 140 || (firstonepos - thirthdone) <= -140)
 			&& ((secondonepos - thirthdone) >= 90 || (thirthdone - secondonepos) >= 90)
@@ -127,10 +142,12 @@ public class TimerTaskImp implements Job {
 			if(perimetro > 6000){
 				System.out.println("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[INTENSA LLUVIA]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]");
 				System.out.println("////////////////////");
+				status = "INTENSA LLUVIA";
 			}else {					
 			
 			System.out.println("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[LLUVIA]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]");
 			System.out.println("////////////////////");
+			status = "LLUVIA";
 			}
 			System.out.println("Day :"+count);
 			System.out.println("firstone :"+firstonepos);
@@ -138,7 +155,10 @@ public class TimerTaskImp implements Job {
 			System.out.println("thirthdone :"+thirthdone);
 			countSuccess += 1;
 			System.out.println("countLluvia: "+countSuccess);
+			
+			repo.save(getWeather(count,status));
 		}		
+		
 	}
 
 	private void alignChequer() {
@@ -162,33 +182,9 @@ public class TimerTaskImp implements Job {
 	}
 
 	@Override
-	public void execute(JobExecution arg0) {
+	public void run() {
 		checkSameAngule(count);
 		count +=1;
-	}
-
-	@Override
-	public JobParametersIncrementer getJobParametersIncrementer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public JobParametersValidator getJobParametersValidator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isRestartable() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }
