@@ -1,5 +1,6 @@
 package com.ml.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,6 +12,12 @@ public class Weather {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
+	@Column(name = "weather_value")
+	private String weatherValue;
+
+	@Column(name = "day_value")
+	private int dayValue;
+
 	public Integer getId() {
 		return id;
 	}
@@ -18,10 +25,6 @@ public class Weather {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	private String weatherValue;
-
-	private int dayValue;
 
 	public String getWeatherValue() {
 		return weatherValue;
