@@ -16,22 +16,18 @@ public class AlignDataCreator implements Runnable {
 	@Override
 	public void run() {
 		Timer timer = new Timer();
-		timer.schedule(timerTask, 0, 10);
-		
-		boolean timerFinish = true;
-		while(timerFinish )
-		{
-			if(!timerTask.isRunning())
-			{
-				try {
-					timerFinish = false;
-					this.finalize();
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
-			}
-				
-		}
+		timer.schedule(timerTask, 0, 10);	
 	}
-
+	
+	public boolean finish() {
+		if (!timerTask.isRunning()) {
+			try {
+				this.finalize();
+				return true;
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
 }

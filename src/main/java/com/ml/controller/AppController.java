@@ -15,54 +15,59 @@ import com.ml.task.StarsTask;
 
 @RestController
 public class AppController {
-	
+
 	@Autowired
 	WeatherRepository repo;
-	
+
 	@Autowired
 	WeatherCountRepository countRepo;
 
-    @RequestMapping("/clima")
-    public WeatherResult weather(@RequestParam(value="dia", defaultValue="1") Integer day) {
-    	Weather item = repo.findByDay(day);
-    	WeatherResult result = new WeatherResult(item.getDayValue(), item.getWeatherValue());
-        return result;
-    }
-    
-    @RequestMapping("/clima/periododesequia")
-    public MaxWeatherResult norain() {
-    	WeatherCountResult item = countRepo.findByType(StarsTask.SEQUIA);
-    	MaxWeatherResult result = new MaxWeatherResult();
-    	result.setDayCountValue(item.getDayCountValue());
-    	result.setWeatherValue(item.getWeatherValue());
-    	result.setWeatherType(item.getWeatherType());
-        return result;
-    }
-    
-    @RequestMapping("/clima/periodosdelluvia")
-    public MaxWeatherResult rain() {
-    	WeatherCountResult item = countRepo.findByType(StarsTask.LLUVIA);
-    	MaxWeatherResult result = new MaxWeatherResult();
-    	result.setDayCountValue(item.getDayCountValue());
-    	result.setWeatherValue(item.getWeatherValue());
-    	result.setWeatherType(item.getWeatherType());
-        return result;
-    }
-    
-    @RequestMapping("/clima/maxperiodosdelluvia")
-    public WeatherResult maxrain() {
-    	Weather item = repo.findByValue(StarsTask.INTENSA_LLUVIA);
-    	WeatherResult result = new WeatherResult(item.getDayValue(), item.getWeatherValue());
-        return result;
-    }
-    
-    @RequestMapping("/clima/condicionoptima")
-    public MaxWeatherResult greatcond() {
-    	WeatherCountResult item = countRepo.findByType(StarsTask.PRESION_TEMP_OPTIMA_TYPE);
-    	MaxWeatherResult result = new MaxWeatherResult();
-    	result.setDayCountValue(item.getDayCountValue());
-    	result.setWeatherValue(item.getWeatherValue());
-    	result.setWeatherType(item.getWeatherType());
-        return result;
-    }
+	@RequestMapping("/clima")
+	public WeatherResult weather(@RequestParam(value = "dia", defaultValue = "1") Integer day) {
+		WeatherResult result;
+		try {
+			Weather item = repo.findByDay(day);
+			result = new WeatherResult(item.getDayValue(), item.getWeatherValue());
+		} catch (Exception e) {
+			result = new WeatherResult(day, "NOTHING FOR THAT DAY");
+		}
+		return result;
+	}
+
+	@RequestMapping("/clima/sequia")
+	public MaxWeatherResult norain() {
+		WeatherCountResult item = countRepo.findByType(StarsTask.SEQUIA);
+		MaxWeatherResult result = new MaxWeatherResult();
+		result.setDayCountValue(item.getDayCountValue());
+		result.setWeatherValue(item.getWeatherValue());
+		result.setWeatherType(item.getWeatherType());
+		return result;
+	}
+
+	@RequestMapping("/clima/lluvia")
+	public MaxWeatherResult rain() {
+		WeatherCountResult item = countRepo.findByType(StarsTask.LLUVIA);
+		MaxWeatherResult result = new MaxWeatherResult();
+		result.setDayCountValue(item.getDayCountValue());
+		result.setWeatherValue(item.getWeatherValue());
+		result.setWeatherType(item.getWeatherType());
+		return result;
+	}
+
+	@RequestMapping("/clima/maxlluvia")
+	public WeatherResult maxrain() {
+		Weather item = repo.findByValue(StarsTask.INTENSA_LLUVIA);
+		WeatherResult result = new WeatherResult(item.getDayValue(), item.getWeatherValue());
+		return result;
+	}
+
+	@RequestMapping("/clima/optimo")
+	public MaxWeatherResult greatcond() {
+		WeatherCountResult item = countRepo.findByType(StarsTask.PRESION_TEMP_OPTIMA_TYPE);
+		MaxWeatherResult result = new MaxWeatherResult();
+		result.setDayCountValue(item.getDayCountValue());
+		result.setWeatherValue(item.getWeatherValue());
+		result.setWeatherType(item.getWeatherType());
+		return result;
+	}
 }
